@@ -9,4 +9,6 @@ char *my_strcpy (char *dest, char const *src);
 
 char *my_memcpy (char *dest, char const *src, size_t n);
 
+char *my_strncpy (char *dest, char const *src, size_t n);
+
 #endif  

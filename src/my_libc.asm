@@ -1,5 +1,5 @@
 
-global my_strlen, my_strcpy, my_memcpy
+global my_strlen, my_strcpy, my_memcpy, my_strncpy 
 
 section .text 
 
@@ -41,7 +41,25 @@ my_memcpy:
     ret 
     
     
+my_strncpy:
+   mov rax, rdi 
 
+.ncopy_loop:
+    cmp rdx, 0 
+    je .esci 
+    dec rdx
+    mov cl, byte [rsi]
+    mov byte [rdi], cl 
+    
+
+    inc rsi 
+    inc rdi 
+
+    cmp cl, 0 
+    jne .ncopy_loop
+
+.esci:
+    ret
 
     
     
