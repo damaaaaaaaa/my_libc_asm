@@ -13,6 +13,12 @@ int main () {
     char *dest = malloc (10 * sizeof (char));
     char *new_string = my_strcpy (dest, src);
     printf ("\nLa stringa copiata e': %s", new_string);
+
+    const char *src2 = "easycola";
+    printf ("\nLa stringa src e': %s", src2);
+    char *dest2 = malloc (10 * sizeof (char));
+    char *new_string2 = my_memcpy (dest2, src2, 8);
+    printf ("\nLa stringa copiata e': %s", new_string2);
     
     return 0;
 }

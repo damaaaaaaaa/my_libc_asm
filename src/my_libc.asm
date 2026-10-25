@@ -1,5 +1,5 @@
 
-global my_strlen, my_strcpy
+global my_strlen, my_strcpy, my_memcpy
 
 section .text 
 
@@ -32,7 +32,18 @@ my_strcpy:
     ret 
 
     
+my_memcpy:
+    mov rax, rdi 
+    mov rcx, rdx 
 
+    rep movsb 
+
+    ret 
+    
+    
+
+
+    
     
 
 
