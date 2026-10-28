@@ -68,7 +68,13 @@ my_strncpy:
     ret
 
 
+
+
+
 my_printf:
+    push rbp
+    mov rbp, rsp
+
     push rcx
     push rdx
     push rsi 
@@ -76,47 +82,58 @@ my_printf:
     mov rbx, rdi
     mov r12, rbx 
 
-    mov rcx, -1
+    mov r13, -1
     
-.primo_controllo:
+.controllo:
     cmp byte [rbx], 0
     je .fine 
 
     cmp byte [rbx], '%'
-    jne .secondo_controllo
-    jmp .verifica_parametro_uno
+    je .verifica_parametro_uno
+
+    cmp byte [rbx], 10
+    je .salto_a_write
+
+    jmp .leggi 
 
 
-.secondo_controllo:
-    cmp byte [rsb], '\'
-    je .verifica_a_capo 
+.salto_a_write:
+    inc rbx
+    call .write
+    mov r12, rbx
     jmp .leggi 
 
 
 .verifica_a_capo:
     inc rbx 
-    cmp byte [rsb]: 'n'
+    cmp byte [rbx], 'n'
     jne .leggi 
-    jmp .write 
+
+    call .write 
+    inc rbx 
+    dec rbx 
+
     jmp .leggi 
 
 
 .leggi:
-    dex rcx 
+    dec r13 
     inc rbx 
-    jmp .primo_controllo
+    jmp .controllo
 
 
 .verifica_parametro_uno:
     inc rbx 
-    dec rcx 
+    dec r13 
 
     cmp byte [rbx], 's'
     jne .verifica_parametro_due
+
     sub rbx, 2 
-    jmp write 
+    call .write 
     add rbx, 2 
-    mov r12, rbx 
+    mov r12, rbx
+
     jmp .stampa_stringhe
     jmp .leggi 
 
@@ -125,34 +142,41 @@ my_printf:
     cmp byte [rbx], 'd'
     jne .leggi
     sub rbx, 2
-    jmp .write  
-    add rbx, 2
+
+    call .write  
+    add rbx, 2 
+    inc rbx 
+    mov r12, rbx 
 
     jmp .calcola_numero
 
 
 .calcola_numero:
-    mov r0, 0 
+    mov r8, 0
+    pop rax
+    mov r11, 10
+
+
+.loop_calcola_numero:
     mov rdx, 0
 
-    pop rax 
-    div rax, 10 
+    div r11 
     add rdx, 48
 
     push rdx
 
-    dec rcx
-    inc r0
-    jmp .salva_numero_buffer
+    dec r13
+    inc r8
 
     cmp rax, 0 
-    jne .calcola_numero
+    jne .loop_calcola_numero
+
     mov r10, buffer_stampa_numero
-    jmp .salva_numero_buffer
+    mov r9, r8
 
 
 .salva_numero_buffer:
-    cmp r0, 0 
+    cmp r8, 0 
     je .stampa_numero
 
     pop rax 
@@ -160,7 +184,7 @@ my_printf:
     mov byte [r10], al
 
     inc r10 
-    dec r0
+    dec r8
 
     jmp .salva_numero_buffer
     
@@ -168,41 +192,45 @@ my_printf:
 .stampa_numero:
     mov rdi, 1 
     mov rsi, buffer_stampa_numero
-    mov rdx, r10 
+    mov rdx, r9 
 
     mov rax, WRITE 
     syscall 
 
+    jmp .leggi
+
 
 .stampa_stringhe:
     pop rdi 
+    mov r14, rdi 
     call my_strlen
 
     mov rdx, rax 
-    mov rsi, rdi 
+    mov rsi, r14 
     mov rdi, 1
 
     mov rax, WRITE 
     syscall
 
-    mov r12, rbx
     inc rbx
-    dec rcx 
+    mov r12, rbx
+    dec r13 
+
+    jmp .leggi
 
 
 .write:
+    mov rdi, 1
     mov rsi, r12 
     mov rdx, rbx 
     sub rdx, r12 
 
     mov rax, WRITE 
     syscall 
-
-    inc rbx
-    mov r12, rbx 
-    dec rcx 
+    ret 
 
 .fine:
+    mov rdi, 1
     mov rsi, r12 
     mov rdx, rbx 
     sub rdx, r12 
@@ -211,7 +239,10 @@ my_printf:
     syscall 
 
     mov rax, -2 
-    sub rax, rcx 
+    sub rax, r13
+
+    mov rsp, rbp 
+    pop rbp
     ret 
 
 

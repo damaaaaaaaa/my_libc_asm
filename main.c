@@ -26,7 +26,8 @@ int main () {
     char *new_string3 = my_memcpy (dest3, src3, 8);
     printf ("\nLa stringa copiata e': %s", new_string3);
 
-    my_printf ("ciao");
+    char *stringa_da_stampare = "ciao ciolini";
+    my_printf ("\nLa stringa digitata dall'utente e': %s\n", stringa_da_stampare);
     
     return 0;
 }
