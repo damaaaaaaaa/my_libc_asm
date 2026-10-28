@@ -6,28 +6,31 @@ int main () {
 
     char* str = "ciolins";
     size_t len = my_strlen (str);
-    printf("\nLa lunghezza della stringa %s e': %ld", str, len);
+    printf("La lunghezza della stringa %s e': %ld", str, len);
 
     const char *src = "easycola";
-    printf ("\nstringa src: %s", src);
+    my_printf ("stringa src: %s\n", src);
     char *dest = malloc (10 * sizeof (char));
     char *new_string = my_strcpy (dest, src);
-    printf ("\nLa stringa copiata e': %s", new_string);
+    my_printf ("La stringa copiata e': %s\n", new_string);
 
     const char *src2 = "easycola";
-    printf ("\nLa stringa src e': %s", src2);
+    my_printf ("La stringa src e': %s\n", src2);
     char *dest2 = malloc (10 * sizeof (char));
     char *new_string2 = my_memcpy (dest2, src2, 8);
-    printf ("\nLa stringa copiata e': %s", new_string2);
+    printf ("\nLa stringa copiata e': %s\n", new_string2);
 
     const char *src3 = "easycola";
-    printf ("\nLa stringa src e': %s", src3);
+    my_printf ("La stringa src e': %s\n", src3);
     char *dest3 = malloc (10 * sizeof (char));
     char *new_string3 = my_memcpy (dest3, src3, 8);
-    printf ("\nLa stringa copiata e': %s", new_string3);
+    printf ("La stringa copiata e': %s\n", new_string3);
 
     char *stringa_da_stampare = "ciao ciolini";
-    my_printf ("\nLa stringa digitata dall'utente e': %s\n", stringa_da_stampare);
+    my_printf ("La stringa digitata dall'utente e': %s\n", stringa_da_stampare);
+
+    int num = 5;
+    my_printf ("il numero stampato e': %d", num);
     
     return 0;
 }
