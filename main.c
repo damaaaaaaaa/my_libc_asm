@@ -25,6 +25,8 @@ int main () {
     char *dest3 = malloc (10 * sizeof (char));
     char *new_string3 = my_memcpy (dest3, src3, 8);
     printf ("\nLa stringa copiata e': %s", new_string3);
+
+    my_printf ("ciao");
     
     return 0;
 }
