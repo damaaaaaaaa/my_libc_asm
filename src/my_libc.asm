@@ -140,7 +140,7 @@ my_printf:
 
 .verifica_parametro_due:
     cmp byte [rbx], 'd'
-    jne .leggi
+    jne .verifica_parametro_tre  
     sub rbx, 2
 
     call .write  
@@ -149,6 +149,37 @@ my_printf:
     mov r12, rbx 
 
     jmp .calcola_numero
+
+
+.verifica_parametro_tre:
+    cmp byte [rbx], 'c'
+    jne .leggi 
+    sub rbx, 2 
+
+    call .write 
+    add rbx, 2 
+    inc rbx 
+    mov r12, rbx 
+
+    jmp .stampa_carattere 
+
+
+.stampa_carattere:
+    pop rax 
+    push rax 
+    mov rsi, rsp 
+
+    mov rdx, 1 
+    mov rdi, 1
+    
+    mov rax, WRITE 
+    syscall
+
+    inc rbx
+    mov r12, rbx
+    dec r13 
+
+    jmp .leggi
 
 
 .calcola_numero:
@@ -249,11 +280,8 @@ my_printf:
 
 
 
-    
 
 
-    
-    
 
 
 

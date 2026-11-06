@@ -30,7 +30,10 @@ int main () {
     my_printf ("La stringa digitata dall'utente e': %s\n", stringa_da_stampare);
 
     int num = 5;
-    my_printf ("il numero stampato e': %d", num);
+    my_printf ("il numero stampato e': %d\n", num);
+    char carattere = 'c';
+
+    my_printf ("numero: %d, stringa: %s, carattere: %c\n", num, src, carattere);
     
     return 0;
 }
