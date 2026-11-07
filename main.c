@@ -34,6 +34,10 @@ int main () {
     char carattere = 'c';
 
     my_printf ("numero: %d, stringa: %s, carattere: %c\n", num, src, carattere);
+    my_printf ("\nciao ciolini\nop easy cola\n");   
     
     return 0;
 }
+
+
+

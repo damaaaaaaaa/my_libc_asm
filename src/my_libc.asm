@@ -1,3 +1,4 @@
+default rel            ; <--- AGGIUNTO: Imposta l'indirizzamento relativo di default
 
 global my_strlen, my_strcpy, my_memcpy, my_strncpy 
 global my_printf
@@ -48,7 +49,7 @@ my_memcpy:
     
     
 my_strncpy:
-   mov rax, rdi 
+    mov rax, rdi 
 
 .ncopy_loop:
     cmp rdx, 0 
@@ -66,9 +67,6 @@ my_strncpy:
 
 .esci:
     ret
-
-
-
 
 
 my_printf:
@@ -99,20 +97,8 @@ my_printf:
 
 .salto_a_write:
     inc rbx
-    call .write
     mov r12, rbx
-    jmp .leggi 
-
-
-.verifica_a_capo:
-    inc rbx 
-    cmp byte [rbx], 'n'
-    jne .leggi 
-
-    call .write 
-    inc rbx 
-    dec rbx 
-
+    call .write
     jmp .leggi 
 
 
@@ -202,7 +188,7 @@ my_printf:
     cmp rax, 0 
     jne .loop_calcola_numero
 
-    mov r10, buffer_stampa_numero
+    lea r10, [rel buffer_stampa_numero] 
     mov r9, r8
 
 
@@ -222,7 +208,9 @@ my_printf:
 
 .stampa_numero:
     mov rdi, 1 
-    mov rsi, buffer_stampa_numero
+    
+    ; <--- MODIFICATO: Usa lea per ottenere l'indirizzo relativo
+    lea rsi, [rel buffer_stampa_numero] 
     mov rdx, r9 
 
     mov rax, WRITE 
@@ -274,10 +262,7 @@ my_printf:
 
     mov rsp, rbp 
     pop rbp
-    ret 
-
-
-
+    ret
 
 
 
