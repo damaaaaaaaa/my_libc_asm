@@ -1,4 +1,4 @@
-default rel            ; <--- AGGIUNTO: Imposta l'indirizzamento relativo di default
+default rel            
 
 global my_strlen, my_strcpy, my_memcpy, my_strncpy 
 global my_printf
@@ -6,7 +6,10 @@ global my_printf
 WRITE equ 1 
 
 section .bss 
+
     buffer_stampa_numero resb 32 
+    buffer_stampa_meno resb 1
+
 
 section .text 
 
@@ -73,6 +76,11 @@ my_printf:
     push rbp
     mov rbp, rsp
 
+    push rbx
+    push r12
+    push r13
+    push r14
+
     push rcx
     push rdx
     push rsi 
@@ -97,9 +105,9 @@ my_printf:
 
 .salto_a_write:
     inc rbx
-    mov r12, rbx
     call .write
-    jmp .leggi 
+    mov r12, rbx
+    jmp .controllo
 
 
 .leggi:
@@ -115,10 +123,11 @@ my_printf:
     cmp byte [rbx], 's'
     jne .verifica_parametro_due
 
-    sub rbx, 2 
+    dec rbx
     call .write 
-    add rbx, 2 
+    inc rbx
     mov r12, rbx
+    inc r12
 
     jmp .stampa_stringhe
     jmp .leggi 
@@ -127,23 +136,48 @@ my_printf:
 .verifica_parametro_due:
     cmp byte [rbx], 'd'
     jne .verifica_parametro_tre  
-    sub rbx, 2
 
+    dec rbx
     call .write  
-    add rbx, 2 
     inc rbx 
     mov r12, rbx 
+    inc r12
 
+    jmp .verifica_negativo
+
+
+.verifica_negativo:
+    pop rax
+    movsxd rax, eax
+    test rax, rax
+    js .printa_il_meno
+
+    push rax
+    jmp .calcola_numero
+    
+
+.printa_il_meno:
+    neg rax
+    push rax
+
+    mov rdi, 1 
+    lea r12, [rel buffer_stampa_meno]
+    mov byte [r12], '-'
+    mov rsi, r12 
+    mov rdx, 1
+    mov rax, WRITE 
+    syscall 
+    
     jmp .calcola_numero
 
 
 .verifica_parametro_tre:
     cmp byte [rbx], 'c'
     jne .leggi 
-    sub rbx, 2 
 
+    dec rbx
     call .write 
-    add rbx, 2 
+    inc rbx
     inc rbx 
     mov r12, rbx 
 
@@ -164,6 +198,8 @@ my_printf:
     inc rbx
     mov r12, rbx
     dec r13 
+
+    pop rax
 
     jmp .leggi
 
@@ -209,7 +245,6 @@ my_printf:
 .stampa_numero:
     mov rdi, 1 
     
-    ; <--- MODIFICATO: Usa lea per ottenere l'indirizzo relativo
     lea rsi, [rel buffer_stampa_numero] 
     mov rdx, r9 
 
@@ -259,6 +294,11 @@ my_printf:
 
     mov rax, -2 
     sub rax, r13
+
+    pop r14
+    pop r13
+    pop r12
+    pop rbx
 
     mov rsp, rbp 
     pop rbp
