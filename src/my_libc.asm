@@ -161,9 +161,8 @@ my_printf:
     push rax
 
     mov rdi, 1 
-    lea r12, [rel buffer_stampa_meno]
-    mov byte [r12], '-'
-    mov rsi, r12 
+    lea rsi, [rel buffer_stampa_meno]
+    mov byte [rsi], '-'
     mov rdx, 1
     mov rax, WRITE 
     syscall 
@@ -201,7 +200,7 @@ my_printf:
 
     pop rax
 
-    jmp .leggi
+    jmp .controllo
 
 
 .calcola_numero:
@@ -251,7 +250,7 @@ my_printf:
     mov rax, WRITE 
     syscall 
 
-    jmp .leggi
+    jmp .controllo
 
 
 .stampa_stringhe:
@@ -270,7 +269,7 @@ my_printf:
     mov r12, rbx
     dec r13 
 
-    jmp .leggi
+    jmp .controllo
 
 
 .write:
