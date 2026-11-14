@@ -172,7 +172,7 @@ my_printf:
 
 .verifica_parametro_tre:
     cmp byte [rbx], 'c'
-    jne .leggi 
+    jne .verifica_unsigned
 
     dec rbx
     call .write 
@@ -201,6 +201,20 @@ my_printf:
     pop rax
 
     jmp .controllo
+    
+
+.verifica_unsigned:
+    cmp byte [rbx], 'u' 
+    jne .leggi
+
+    dec rbx 
+    call .write 
+    inc rbx
+
+    mov r12, rbx 
+    inc r12
+
+    jmp .calcola_numero
 
 
 .calcola_numero:
