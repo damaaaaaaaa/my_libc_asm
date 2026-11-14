@@ -95,12 +95,17 @@ my_printf:
     je .fine 
 
     cmp byte [rbx], '%'
-    je .verifica_parametro_uno
+    je .stampa_e_verifica
 
     cmp byte [rbx], 10
     je .salto_a_write
 
     jmp .leggi 
+    
+
+.stampa_e_verifica:
+    call .write 
+    jmp .verifica_parametro_long
 
 
 .salto_a_write:
@@ -116,16 +121,44 @@ my_printf:
     jmp .controllo
 
 
-.verifica_parametro_uno:
-    inc rbx 
-    dec r13 
+.verifica_parametro_long:
+    inc rbx
+    dec r13
+    cmp byte [rbx], 'l' 
+    je .verifica_secondo_long
 
+    jmp .verifica_parametro_uno
+
+
+.verifica_secondo_long:
+    inc rbx 
+    dec r13
+    cmp byte [rbx], 'l'
+    jne .verifica_intero
+
+    inc rbx 
+    dec r13
+    jmp .verifica_intero
+
+
+.verifica_intero:
+    cmp byte [rbx], 'd'
+    je .verifica_negativo
+
+    jmp .verifica_unsigned
+
+
+.verifica_unsigned:
+    cmp byte [rbx], 'u'
+    je .calcola_numero
+
+    jmp .leggi 
+    
+
+.verifica_parametro_uno:
     cmp byte [rbx], 's'
     jne .verifica_parametro_due
 
-    dec rbx
-    call .write 
-    inc rbx
     mov r12, rbx
     inc r12
 
@@ -137,9 +170,6 @@ my_printf:
     cmp byte [rbx], 'd'
     jne .verifica_parametro_tre  
 
-    dec rbx
-    call .write  
-    inc rbx 
     mov r12, rbx 
     inc r12
 
@@ -148,7 +178,6 @@ my_printf:
 
 .verifica_negativo:
     pop rax
-    movsxd rax, eax
     test rax, rax
     js .printa_il_meno
 
@@ -172,13 +201,7 @@ my_printf:
 
 .verifica_parametro_tre:
     cmp byte [rbx], 'c'
-    jne .verifica_unsigned
-
-    dec rbx
-    call .write 
-    inc rbx
-    inc rbx 
-    mov r12, rbx 
+    jne .verifica_parametro_unsigned
 
     jmp .stampa_carattere 
 
@@ -203,13 +226,9 @@ my_printf:
     jmp .controllo
     
 
-.verifica_unsigned:
+.verifica_parametro_unsigned:
     cmp byte [rbx], 'u' 
     jne .leggi
-
-    dec rbx 
-    call .write 
-    inc rbx
 
     mov r12, rbx 
     inc r12
@@ -264,6 +283,9 @@ my_printf:
     mov rax, WRITE 
     syscall 
 
+    inc rbx
+    mov r12, rbx
+
     jmp .controllo
 
 
@@ -308,10 +330,10 @@ my_printf:
     mov rax, -2 
     sub rax, r13
 
-    pop r14
-    pop r13
-    pop r12
-    pop rbx
+    mov r14, [rbp-32]
+    mov r13, [rbp-24]
+    mov r12, [rbp-16]
+    mov rbx, [rbp-8]
 
     mov rsp, rbp 
     pop rbp

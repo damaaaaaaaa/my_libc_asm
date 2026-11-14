@@ -11,6 +11,6 @@ char *my_memcpy (char *dest, char const *src, size_t n);
 
 char *my_strncpy (char *dest, char const *src, size_t n);
 
-int my_printf (const char *format, ...);
+int my_printf (const char *format, ...) __attribute__((format(printf, 1, 2)));
 
 #endif  
