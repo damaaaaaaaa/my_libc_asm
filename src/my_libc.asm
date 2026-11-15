@@ -127,7 +127,7 @@ my_printf:
     cmp byte [rbx], 'l' 
     je .verifica_secondo_long
 
-    jmp .verifica_parametro_uno
+    jmp .verifica_parametro_stringa
 
 
 .verifica_secondo_long:
@@ -155,9 +155,9 @@ my_printf:
     jmp .leggi 
     
 
-.verifica_parametro_uno:
+.verifica_parametro_stringa:
     cmp byte [rbx], 's'
-    jne .verifica_parametro_due
+    jne .verifica_parametro_numero
 
     mov r12, rbx
     inc r12
@@ -166,9 +166,9 @@ my_printf:
     jmp .leggi 
 
 
-.verifica_parametro_due:
+.verifica_parametro_numero:
     cmp byte [rbx], 'd'
-    jne .verifica_parametro_tre  
+    jne .verifica_parametro_carattere
 
     mov r12, rbx 
     inc r12
@@ -199,7 +199,7 @@ my_printf:
     jmp .calcola_numero
 
 
-.verifica_parametro_tre:
+.verifica_parametro_carattere:
     cmp byte [rbx], 'c'
     jne .verifica_parametro_unsigned
 
@@ -228,7 +228,7 @@ my_printf:
 
 .verifica_parametro_unsigned:
     cmp byte [rbx], 'u' 
-    jne .leggi
+    jne .verifica_parametro_percentuale
 
     mov r12, rbx 
     inc r12
@@ -287,6 +287,18 @@ my_printf:
     mov r12, rbx
 
     jmp .controllo
+
+
+.verifica_parametro_percentuale:
+    cmp byte [rbx], '%'
+    jne .leggi
+
+    mov r12, rbx 
+    inc rbx
+    call .write
+    mov r12, rbx
+    inc rbx
+    jmp .leggi
 
 
 .stampa_stringhe:
